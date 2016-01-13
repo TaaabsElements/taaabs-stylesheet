@@ -1,0 +1,100 @@
+<link rel="import" href="../taaabs-trace-to-model-behavior/taaabs-trace-to-model-behavior.html">
+<link rel="import" href="../taaabs-stylesheet-behavior/taaabs-stylesheet-behavior.html">
+
+<dom-module id="taaabs-stylesheet">
+  <template>
+     <h1> Obsel Type Liste : </h1>
+
+           <template is="dom-repeat" items="{{obselTypes}}">
+             <div id = {{item.type}} name ={{item.type}} >
+              <h2>{{item.type}}</h2>
+              <paper-input name="icon" label="Icon" value={{item.icon}} ></paper-input>
+              <paper-input name="width" label="width" value={{item.width}} ></paper-input>
+              <paper-input name="height" label="Height" value={{item.height}} ></paper-input>
+              <paper-input name="y" label="Y" value={{item.y}} ></paper-input>
+            </div>
+              <!--div># <span>{{index}}</span></div-->
+          </template>
+     <paper-button  on-click="_Submit" raised>Submit</paper-button>
+
+
+   </template>
+
+  <script>
+    (function () {
+      /* global Polymer, TaaabsBehaviors */
+
+      Polymer({
+        is: 'taaabs-stylesheet',
+        behaviors: [
+          TaaabsBehaviors.TraceToModel,
+          TaaabsBehaviors.Stylesheet
+        ],
+
+        properties: {
+          trace: {
+            type: Object,
+            notify: true,
+          },
+          model: {
+            type: Object,
+            notify: true,
+            observer: 'traceChanged'
+          },
+          options: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+          }
+        },
+        traceChanged: function() {
+          var that = this ;
+        //  newValue.on('trace:model',function() {
+          //  var model = new Samotraces.Ktbs.Model(newValue.get_model()); // jshint ignore:line
+          var model = this.model;
+            model.on('Model:listeType', function(e) {
+              var arrayObselTypes = e.data;
+              var stylesheet = that.options;
+            //  that._getStylesheet(newValue.get_uri()).then(function (stylesheet) { // jshint ignore:line
+                var objDefault = {};
+                objDefault.type = 'default';
+                arrayObselTypes.push(objDefault);
+                for (var attrname in arrayObselTypes){
+                  if (stylesheet[arrayObselTypes[attrname].type]){
+                      for (var attrname2 in stylesheet[arrayObselTypes[attrname].type]){
+                        arrayObselTypes[attrname][attrname2] = stylesheet[arrayObselTypes[attrname].type][attrname2];
+                      }
+                  }
+                  if (Number (attrname) === arrayObselTypes.length - 1) {
+                    that.obselTypes = arrayObselTypes;
+                  }
+                }
+            //  });
+            });
+          //});
+       },
+      _Submit: function () {
+          var objStyle = {};
+          objStyle.TraceURI= this.trace.get_uri(); // jshint ignore:line
+          objStyle.ObselType = {};
+          var allDiv = this.shadowRoot.querySelectorAll('div');
+          for (var i=0 ;  i < allDiv.length; i++){
+            var obselType = allDiv[i].id ;
+            var objAttribut = {};
+            var allInput = allDiv[i].querySelectorAll('paper-input');
+            for (var j=0 ; j< allInput.length ; j++) {
+                var input = allInput[j];
+                objAttribut[input.name]=input.value;
+            }
+            objStyle.ObselType[obselType] = objAttribut;
+          }
+          console.log (objStyle);
+          // add to localStorage
+          this._PutStylesheet(this.trace.get_uri(), objStyle); // jshint ignore:line
+          this.set('options',objStyle.ObselType);
+        }
+     });
+    })();
+  </script>
+
+</dom-module>
