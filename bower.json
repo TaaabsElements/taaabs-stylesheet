@@ -18,8 +18,10 @@
   "license": "https://github.com/TaaabsElements/taaabs-stylesheet/LICENSE",
   "dependencies": {
     "polymer": "polymer/polymer#^1.0.0",
-		"taaabs-stylesheet-behavior": "https://github.com/TaaabsElements/taaabs-stylesheet-behavior.git",
-		"taaabs-trace-to-model-behavior": "https://github.com/TaaabsElements/taaabs-trace-to-model-behavior.git"
+    "taaabs-stylesheet-behavior": "https://github.com/TaaabsElements/taaabs-stylesheet-behavior.git",
+    "taaabs-trace-to-model-behavior": "https://github.com/TaaabsElements/taaabs-trace-to-model-behavior.git",
+    "paper-button": "polymerelements/paper-button#^1.0.0",
+    "paper-input": "polymerelements/paper-input#^1.0.0"
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
